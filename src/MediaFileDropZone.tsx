@@ -64,6 +64,7 @@ const MediaFileDropZone: React.FC<MediaFileDropZoneProps> = ({ children }) => {
             name: file.name,
             type: file.type.startsWith("video") ? "video" : "audio",
             url: fileUrl,
+            size: file.size,
             durationInSeconds: mediaElement.duration,
             addedOn: new Date().toISOString(),
             isCurrentlyPlaying: false,

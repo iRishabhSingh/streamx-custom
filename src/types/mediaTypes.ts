@@ -3,6 +3,7 @@ export interface Track {
   name: string; // Name of the media track
   type: string; // Type of media, e.g., "audio" or "video"
   url: string; // URL to access the media file
+  size: number; // Size of the media file in bytes
   durationInSeconds: number; // Duration of the track in seconds
   addedOn: string; // Date when the track was added to the playlist
   isCurrentlyPlaying: boolean; // Indicates if the track is currently being played
