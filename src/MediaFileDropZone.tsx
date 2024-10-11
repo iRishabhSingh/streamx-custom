@@ -2,15 +2,22 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useRef, useState } from "react";
 
 import { RootState } from "@/app/store";
-import type { Track } from "@/types/mediaTypes";
-import { addTrack, playNextTrack } from "@/features/playlist/playlistSlice";
+import { playNextTrack } from "@/features/playlist/playlistSlice";
+import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
 
-interface MediaFileDropZoneProps {
-  children: React.ReactNode;
-}
-
-const MediaFileDropZone: React.FC<MediaFileDropZoneProps> = ({ children }) => {
+const MediaFileDropZone: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const tracks = useSelector((state: RootState) => state.tracks);
+  const currentTrackIndex = useSelector(
+    (state: RootState) => state.currentTrackIndex,
+  );
+  const currentTrack = tracks[currentTrackIndex];
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   // Handle when files are dragged over the drop zone
   const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
@@ -35,50 +42,7 @@ const MediaFileDropZone: React.FC<MediaFileDropZoneProps> = ({ children }) => {
     );
 
     if (validMediaFiles.length > 0) {
-      onMediaFilesAccepted(validMediaFiles); // Call the passed function with valid media files
-    }
-  };
-
-  const dispatch = useDispatch();
-  const tracks = useSelector((state: RootState) => state.tracks);
-  const currentTrackIndex = useSelector(
-    (state: RootState) => state.currentTrackIndex,
-  );
-  const currentTrack = tracks[currentTrackIndex];
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-
-  // Handle file uploads and metadata extraction
-  const onMediaFilesAccepted = async (files: File[]) => {
-    if (files) {
-      files.forEach((file) => {
-        const fileUrl = URL.createObjectURL(file);
-        const mediaElement = document.createElement(
-          file.type.startsWith("video") ? "video" : "audio",
-        );
-
-        mediaElement.src = fileUrl;
-        mediaElement.addEventListener("loadedmetadata", () => {
-          const track: Track = {
-            id: fileUrl,
-            name: file.name,
-            type: file.type.startsWith("video") ? "video" : "audio",
-            url: fileUrl,
-            size: file.size,
-            durationInSeconds: mediaElement.duration,
-            addedOn: new Date().toISOString(),
-            isCurrentlyPlaying: false,
-            isMarkedAsFavorite: false,
-            isLoopEnabled: false,
-            shouldSkip: false,
-            hasBeenPlayed: false,
-          };
-
-          dispatch(addTrack(track));
-        });
-
-        mediaElement.load();
-      });
+      handleValidMediaFiles(validMediaFiles, dispatch); // Call the passed function with valid media files
     }
   };
 
