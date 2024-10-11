@@ -16,6 +16,7 @@ export interface Track {
 export interface Playlist {
   tracks: Track[]; // List of media tracks in the playlist
   currentTrackIndex: number; // Index of the currently playing track
+  isCurrentlyPlaying: boolean; // Indicates if the playlist is currently playing
   isLoopEnabled: boolean; // Indicates if loop mode is enabled for the entire playlist
   isShuffleEnabled: boolean; // Indicates if shuffle mode is enabled
   volumeLevel: number; // Volume level (range: 0.0 to 1.0)

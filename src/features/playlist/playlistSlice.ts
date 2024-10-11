@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const initialState: Playlist = {
   tracks: [],
   currentTrackIndex: 0,
+  isCurrentlyPlaying: false,
   isLoopEnabled: false,
   isShuffleEnabled: false,
   volumeLevel: 0.5,
