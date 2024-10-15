@@ -70,7 +70,7 @@ const MediaFileDropZone: React.FC<{ children: React.ReactNode }> = ({
       {children}
 
       {isDragging && (
-        <div className="absolute left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center text-center">
+        <div className="absolute left-0 top-0 z-50 flex h-full w-full flex-col items-center justify-center bg-white text-center dark:bg-black">
           <h1 className="mb-6 text-xl font-extrabold tracking-wide text-white sm:text-3xl md:text-4xl lg:text-5xl">
             Ready to Drop Your Media?
           </h1>
