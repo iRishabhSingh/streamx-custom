@@ -1,11 +1,26 @@
+import {
+  closestCorners,
+  DndContext,
+  KeyboardSensor,
+  PointerSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 
 import { cn } from "@/lib/utils";
 import { UploadIcon } from "@/assets";
+import Track from "@/components/track";
 import { RootState } from "@/app/store";
-import GridPattern from "./grid-pattern";
+import GridPattern from "@/components/grid-pattern";
 import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
 
 const mainVariant = {
@@ -19,16 +34,24 @@ const secondaryVariant = {
 };
 
 export const AddTracks = () => {
+  const sensors = useSensors(
+    useSensor(TouchSensor),
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    }),
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const dispatch = useDispatch();
   const tracks = useSelector((state: RootState) => state.tracks);
 
   const handleFileChange = (newFiles: File[]) => {
-    const files = newFiles.filter(
+    const validFiles = newFiles.filter(
       (file) => file.type.startsWith("audio") || file.type.startsWith("video"),
     );
-    handleValidMediaFiles(files, dispatch); // Dispatching to Redux store
+    handleValidMediaFiles(validFiles, dispatch);
   };
 
   const handleClick = () => fileInputRef.current?.click();
@@ -61,21 +84,27 @@ export const AddTracks = () => {
           <p className="relative z-20 font-sans text-base font-bold text-neutral-700 dark:text-neutral-300">
             Upload file
           </p>
-
           <p className="relative z-20 mt-2 font-sans text-sm font-normal text-neutral-400 dark:text-neutral-400">
             Drag or drop your files here or click to upload
           </p>
 
           <div className="relative mx-auto mt-10 max-h-[40vh] w-full max-w-xl overflow-scroll">
+            <DndContext sensors={sensors} collisionDetection={closestCorners}>
+              <SortableContext
+                items={tracks}
+                strategy={verticalListSortingStrategy}
+              >
+                {tracks.map((track) => (
+                  <Track key={track.id} track={track} />
+                ))}
+              </SortableContext>
+            </DndContext>
+
             {!tracks.length && (
               <motion.div
                 layoutId="file-upload"
                 variants={mainVariant}
-                transition={{
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20,
-                }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
                 className={cn(
                   "relative z-40 mx-auto mt-4 flex h-32 w-full max-w-[8rem] items-center justify-center rounded-md bg-white group-hover/file:shadow-2xl dark:bg-neutral-900",
                   "shadow-[0px_10px_50px_rgba(0,0,0,0.1)]",
