@@ -22,6 +22,10 @@ export const playlistSlice = createSlice({
       state.tracks.push(action.payload);
     },
 
+    setTracks: (state, action: PayloadAction<Track[]>) => {
+      state.tracks = action.payload;
+    },
+
     removeTrackById: (state, action: PayloadAction<string>) => {
       const trackIndex = state.tracks.findIndex(
         (track) => track.id === action.payload,
@@ -156,6 +160,7 @@ export const playlistSlice = createSlice({
 
 export const {
   addTrack,
+  setTracks,
   removeTrackById,
   clearPlaylist,
   playNextTrack,

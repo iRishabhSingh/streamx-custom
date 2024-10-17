@@ -1,6 +1,7 @@
 import {
   closestCorners,
   DndContext,
+  DragEndEvent,
   KeyboardSensor,
   PointerSensor,
   TouchSensor,
@@ -8,6 +9,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
@@ -22,6 +24,7 @@ import Track from "@/components/track";
 import { RootState } from "@/app/store";
 import GridPattern from "@/components/grid-pattern";
 import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
+import { setTracks } from "@/features/playlist/playlistSlice";
 
 const mainVariant = {
   initial: { x: 0, y: 0 },
@@ -56,6 +59,19 @@ export const AddTracks = () => {
 
   const handleClick = () => fileInputRef.current?.click();
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id === over?.id) return;
+
+    const oldIndex = tracks.findIndex((track) => track.id === active.id);
+    const newIndex = tracks.findIndex((track) => track.id === over?.id);
+
+    const updatedTracks = arrayMove(tracks, oldIndex, newIndex);
+
+    dispatch(setTracks(updatedTracks));
+  };
+
   return (
     <div className="flex h-full w-full items-center justify-center">
       <motion.div
@@ -89,7 +105,11 @@ export const AddTracks = () => {
           </p>
 
           <div className="relative mx-auto mt-10 max-h-[40vh] w-full max-w-xl overflow-scroll">
-            <DndContext sensors={sensors} collisionDetection={closestCorners}>
+            <DndContext
+              sensors={sensors}
+              onDragEnd={handleDragEnd}
+              collisionDetection={closestCorners}
+            >
               <SortableContext
                 items={tracks}
                 strategy={verticalListSortingStrategy}
