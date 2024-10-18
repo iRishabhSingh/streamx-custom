@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CSS } from "@dnd-kit/utilities";
+import { useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 
 import {
@@ -11,10 +12,13 @@ import {
   VideoIcon,
 } from "@/assets";
 import { cn } from "@/lib/utils";
+import TrackActionsMenu from "./track-action-menu";
 import { truncateTrackName } from "@/utils/formatUtils";
 import type { Track as TrackProp } from "@/types/mediaTypes";
 
 const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: track.id });
 
@@ -25,12 +29,28 @@ const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
 
   const { name, isMarkedAsFavorite, isLoopEnabled } = track;
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as HTMLElement;
+      if (showOptionsMenu && !target.closest(".options-menu")) {
+        setShowOptionsMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showOptionsMenu, setShowOptionsMenu]);
+
   return (
     <motion.article
       style={style}
       {...attributes}
       ref={setNodeRef}
-      className={cn("relative z-40 mx-auto mt-4 flex w-full items-center")}
+      className={cn("relative mx-auto mt-4 flex w-full items-center")}
     >
       {/* Drag Handle */}
       <motion.div
@@ -92,10 +112,18 @@ const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
           {/* Options Menu */}
           <button
             aria-label="Track Options"
+            onClick={() => setShowOptionsMenu((prev) => !prev)}
             className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
           >
             <TrackMenuIcon size={20} />
           </button>
+
+          {/* Dropdown Menu */}
+          {showOptionsMenu && (
+            <div className="options-menu absolute right-0 mt-2">
+              <TrackActionsMenu track={track} />
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.article>
