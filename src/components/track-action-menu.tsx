@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import type { Track } from "@/types/mediaTypes";
+import TrackDetailsPopup from "@/components/track-details-popup";
 import { HeartIcon, LoopIcon, SkipIcon, RemoveIcon, InfoIcon } from "@/assets";
 
 const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
@@ -72,7 +73,9 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
       </div>
 
       {/* Track Details Popup */}
-      {isDetailsPopupOpen && <></>}
+      {isDetailsPopupOpen && (
+        <TrackDetailsPopup track={track} onClose={toggleDetailsPopup} />
+      )}
     </>
   );
 };

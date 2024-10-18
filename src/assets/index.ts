@@ -1,10 +1,15 @@
 export { default as AudioIcon } from "./icons/audio-icon";
+export { default as CalendarIcon } from "./icons/calendar-icon";
+export { default as ClockIcon } from "./icons/clock-icon";
+export { default as CloseIcon } from "./icons/close-icon";
+export { default as FileIcon } from "./icons/file-icon";
 export { default as GridIcon } from "./icons/grid-icon";
 export { default as HeartIcon } from "./icons/heart-icon";
 export { default as InfoIcon } from "./icons/info-icon";
 export { default as LoopIcon } from "./icons/loop-icon";
 export { default as RemoveIcon } from "./icons/remove-icon";
 export { default as SkipIcon } from "./icons/skip-icon";
+export { default as StorageIcon } from "./icons/storage-icon";
 export { default as TrackMenuIcon } from "./icons/track-menu-icon";
 export { default as UploadIcon } from "./icons/upload-icon";
 export { default as VideoIcon } from "./icons/video-icon";
