@@ -25,13 +25,13 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
       className: "md:hidden",
     },
     {
-      label: isLoopEnabled ? "Disable Loop" : "Enable Loop",
+      label: isLoopEnabled ? "Disable Loop" : "Loop",
       icon: <LoopIcon size={20} />,
       onClick: () => {},
       className: "md:hidden",
     },
     {
-      label: shouldSkip ? "Don't Skip" : "Should Skip",
+      label: shouldSkip ? "Don't skip" : "Skip track",
       icon: <SkipIcon variant={shouldSkip ? "filled" : "outlined"} size={20} />,
       onClick: () => {},
       className: "",
@@ -43,7 +43,7 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
       className: "",
     },
     {
-      label: "Delete",
+      label: "Delete track",
       icon: <RemoveIcon size={20} />,
       onClick: () => {},
       className: "text-red-600 dark:text-red-400",

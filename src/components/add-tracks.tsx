@@ -19,12 +19,12 @@ import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 
 import { cn } from "@/lib/utils";
-import { UploadIcon } from "@/assets";
 import Track from "@/components/track";
 import { RootState } from "@/app/store";
 import GridPattern from "@/components/grid-pattern";
-import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
 import { setTracks } from "@/features/playlist/playlistSlice";
+import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
+import { LoopIcon, RemoveIcon, ShuffleIcon, UploadIcon } from "@/assets";
 
 const mainVariant = {
   initial: { x: 0, y: 0 },
@@ -104,7 +104,7 @@ export const AddTracks = () => {
             Drag or drop your files here or click to upload
           </p>
 
-          <div className="relative mx-auto mt-10 max-h-[40vh] w-full max-w-xl overflow-scroll">
+          <div className="relative mx-auto mt-10 w-full max-w-xl">
             <DndContext
               sensors={sensors}
               onDragEnd={handleDragEnd}
@@ -114,9 +114,45 @@ export const AddTracks = () => {
                 items={tracks}
                 strategy={verticalListSortingStrategy}
               >
-                {tracks.map((track) => (
-                  <Track key={track.id} track={track} />
-                ))}
+                {tracks.length > 0 && (
+                  <div className="rounded-lg border">
+                    <div className="flex flex-wrap items-center justify-between gap-y-2 rounded-t-lg border-b bg-neutral-200 px-4 py-2 text-start dark:bg-neutral-900">
+                      <span className="w-full px-2 text-center font-medium sm:w-auto sm:text-start">
+                        Playlist
+                      </span>
+                      <div className="flex w-full justify-center gap-4 px-2 sm:w-auto sm:justify-end">
+                        {/* Loop */}
+                        <button
+                          aria-label="Loop"
+                          className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                        >
+                          <LoopIcon size={20} />
+                        </button>
+
+                        {/* Shuffle */}
+                        <button
+                          aria-label="Shuffle"
+                          className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                        >
+                          <ShuffleIcon size={20} />
+                        </button>
+
+                        {/* Clear Playlist Button */}
+                        <button
+                          aria-label="Clear Playlist"
+                          className="rounded-full p-2 text-red-600 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-red-400 dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                        >
+                          <RemoveIcon size={20} />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mx-4 mb-4 max-h-[40dvh] overflow-scroll">
+                      {tracks.map((track) => (
+                        <Track key={track.id} track={track} />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </SortableContext>
             </DndContext>
 

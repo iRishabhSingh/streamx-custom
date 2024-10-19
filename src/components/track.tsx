@@ -12,9 +12,9 @@ import {
   VideoIcon,
 } from "@/assets";
 import { cn } from "@/lib/utils";
-import TrackActionsMenu from "./track-action-menu";
 import { truncateTrackName } from "@/utils/formatUtils";
 import type { Track as TrackProp } from "@/types/mediaTypes";
+import TrackActionsMenu from "@/components/track-action-menu";
 
 const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
@@ -50,20 +50,22 @@ const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
       style={style}
       {...attributes}
       ref={setNodeRef}
-      className={cn("relative mx-auto mt-4 flex w-full items-center")}
+      className={cn(
+        "relative mx-auto mt-4 flex w-full items-center rounded-lg bg-neutral-900/10 dark:bg-neutral-400/10",
+      )}
     >
       {/* Drag Handle */}
       <motion.div
         tabIndex={0}
         {...listeners}
         title="Drag to reorder"
-        className="cursor-move rounded-lg p-3 opacity-60 hover:opacity-80"
+        className="cursor-move rounded-lg p-2 opacity-60 hover:opacity-80"
       >
         <GridIcon size={20} />
       </motion.div>
 
       {/* Track Content */}
-      <motion.div className="flex w-full flex-1 flex-grow items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white p-3 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+      <motion.div className="flex w-full flex-1 flex-grow items-center justify-between gap-2 rounded-lg border border-neutral-200 bg-white p-2 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
         {/* Track Icon and Name */}
         <div className="flex flex-1 items-center gap-2">
           {/* Media Type Icon */}

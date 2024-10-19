@@ -79,7 +79,11 @@ const TrackDetailsPopup: React.FC<TrackDetailsPopupProps> = ({
               {/* Type */}
               <tr>
                 <td className="flex items-center gap-2 whitespace-nowrap px-6 py-4">
-                  {type === "audio" ? <AudioIcon /> : <VideoIcon />}
+                  {type === "audio" ? (
+                    <AudioIcon size={20} />
+                  ) : (
+                    <VideoIcon size={20} />
+                  )}
                   <span className="font-medium">Type</span>
                 </td>
                 <td className="px-6 py-4 text-start text-sm text-gray-700 dark:text-gray-300">
@@ -90,7 +94,7 @@ const TrackDetailsPopup: React.FC<TrackDetailsPopupProps> = ({
               {/* Duration */}
               <tr>
                 <td className="flex items-center gap-2 whitespace-nowrap px-6 py-4">
-                  <ClockIcon />
+                  <ClockIcon size={20} />
                   <span className="font-medium">Duration</span>
                 </td>
                 <td className="px-6 py-4 text-start text-sm text-gray-700 dark:text-gray-300">
@@ -101,7 +105,7 @@ const TrackDetailsPopup: React.FC<TrackDetailsPopupProps> = ({
               {/* Size */}
               <tr>
                 <td className="flex items-center gap-2 whitespace-nowrap px-6 py-4">
-                  <StorageIcon />
+                  <StorageIcon size={20} />
                   <span className="font-medium">Size</span>
                 </td>
                 <td className="px-6 py-4 text-start text-sm text-gray-700 dark:text-gray-300">
@@ -112,7 +116,7 @@ const TrackDetailsPopup: React.FC<TrackDetailsPopupProps> = ({
               {/* Format */}
               <tr>
                 <td className="flex items-center gap-2 whitespace-nowrap px-6 py-4">
-                  <FileIcon />
+                  <FileIcon size={20} />
                   <span className="font-medium">Format</span>
                 </td>
                 <td className="px-6 py-4 text-start text-sm text-gray-700 dark:text-gray-300">
@@ -125,7 +129,7 @@ const TrackDetailsPopup: React.FC<TrackDetailsPopupProps> = ({
               {/* Added On */}
               <tr>
                 <td className="flex items-center gap-2 whitespace-nowrap px-6 py-4">
-                  <CalendarIcon />
+                  <CalendarIcon size={20} />
                   <span className="font-medium">Added</span>
                 </td>
                 <td className="px-6 py-4 text-start text-sm text-gray-700 dark:text-gray-300">
