@@ -3,6 +3,7 @@ import {
   setLoopEnabled,
   setShuffleEnabled,
   setAutoPlayEnabled,
+  updateTrackById,
 } from "@/features/playlist/playlistSlice";
 import type { Track } from "@/types/mediaTypes";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
@@ -39,4 +40,14 @@ export const handleShuffle = (
 
 export const handleClearPlaylist = (dispatch: Dispatch<UnknownAction>) => {
   dispatch(setTracks([]));
+};
+
+// Helper to update a track's field
+export const updateTrackField = (
+  track: Track,
+  field: keyof Track,
+  dispatch: Dispatch<UnknownAction>,
+) => {
+  const updatedTrack = { ...track, [field]: !track[field] };
+  dispatch(updateTrackById(updatedTrack));
 };

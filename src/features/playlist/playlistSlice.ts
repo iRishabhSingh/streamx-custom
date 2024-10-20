@@ -41,6 +41,14 @@ export const playlistSlice = createSlice({
       }
     },
 
+    updateTrackById: (state, action: PayloadAction<Track>) => {
+      const trackIndex = state.tracks.findIndex(
+        (track) => track.id === action.payload.id,
+      );
+
+      state.tracks[trackIndex] = action.payload;
+    },
+
     clearPlaylist: (state) => {
       state.tracks = [];
       state.currentTrackIndex = 0;
@@ -148,13 +156,6 @@ export const playlistSlice = createSlice({
     setPlaybackSpeed: (state, action: PayloadAction<number>) => {
       state.playbackSpeedMultiplier = action.payload;
     },
-
-    toggleTrackFavorite: (state, action: PayloadAction<string>) => {
-      const track = state.tracks.find((track) => track.id === action.payload);
-      if (track) {
-        track.isMarkedAsFavorite = !track.isMarkedAsFavorite;
-      }
-    },
   },
 });
 
@@ -162,6 +163,7 @@ export const {
   addTrack,
   setTracks,
   removeTrackById,
+  updateTrackById,
   clearPlaylist,
   playNextTrack,
   setCurrentTrackIndex,
@@ -171,7 +173,6 @@ export const {
   setMuted,
   setAutoPlayEnabled,
   setPlaybackSpeed,
-  toggleTrackFavorite,
 } = playlistSlice.actions;
 
 export default playlistSlice.reducer;
