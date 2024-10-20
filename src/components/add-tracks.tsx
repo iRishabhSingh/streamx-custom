@@ -18,9 +18,18 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 
+import {
+  handleLoop,
+  handleShuffle,
+  handleClearPlaylist,
+  handleAutoPlay,
+} from "@/features/playlist/playlistActions";
+
 import { cn } from "@/lib/utils";
 import Track from "@/components/track";
 import { RootState } from "@/app/store";
+import { Toggle } from "@/components/ui/toggle";
+import { Switch } from "@/components/ui/switch";
 import GridPattern from "@/components/grid-pattern";
 import { setTracks } from "@/features/playlist/playlistSlice";
 import { handleValidMediaFiles } from "@/utils/handleMediaFiles";
@@ -49,6 +58,13 @@ export const AddTracks = () => {
 
   const dispatch = useDispatch();
   const tracks = useSelector((state: RootState) => state.tracks);
+  const isLoopEnabled = useSelector((state: RootState) => state.isLoopEnabled);
+  const isShuffleEnabled = useSelector(
+    (state: RootState) => state.isShuffleEnabled,
+  );
+  const isAutoPlayEnabled = useSelector(
+    (state: RootState) => state.isAutoPlayEnabled,
+  );
 
   const handleFileChange = (newFiles: File[]) => {
     const validFiles = newFiles.filter(
@@ -120,30 +136,46 @@ export const AddTracks = () => {
                       <span className="w-full px-2 text-center font-medium sm:w-auto sm:text-start">
                         Playlist
                       </span>
-                      <div className="flex w-full justify-center gap-4 px-2 sm:w-auto sm:justify-end">
+                      <div className="flex w-full items-center justify-center gap-4 px-2 sm:w-auto sm:justify-end">
+                        {/* AutoPlay */}
+                        <div className="flex h-9 w-9 items-center justify-center">
+                          <Switch
+                            checked={isAutoPlayEnabled}
+                            onCheckedChange={() =>
+                              handleAutoPlay(isAutoPlayEnabled, dispatch)
+                            }
+                            className="h-2 w-6 border-none p-0 *:border-2 *:border-white data-[state=unchecked]:bg-zinc-500 *:data-[state=checked]:translate-x-2"
+                          />
+                        </div>
+
                         {/* Loop */}
-                        <button
+                        <Toggle
                           aria-label="Loop"
-                          className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                          className="rounded-full p-2"
+                          onClick={() => handleLoop(isLoopEnabled, dispatch)}
                         >
                           <LoopIcon size={20} />
-                        </button>
+                        </Toggle>
 
                         {/* Shuffle */}
-                        <button
-                          aria-label="Shuffle"
-                          className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                        <Toggle
+                          aria-label="Loop"
+                          className="rounded-full p-2"
+                          onClick={() =>
+                            handleShuffle(isShuffleEnabled, tracks, dispatch)
+                          }
                         >
                           <ShuffleIcon size={20} />
-                        </button>
+                        </Toggle>
 
-                        {/* Clear Playlist Button */}
-                        <button
+                        {/* Clear Playlist */}
+                        <Toggle
                           aria-label="Clear Playlist"
-                          className="rounded-full p-2 text-red-600 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-red-400 dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+                          onClick={() => handleClearPlaylist(dispatch)}
+                          className="rounded-full p-2 text-red-600 hover:bg-red-400/20 hover:text-red-600 dark:text-red-400 dark:hover:bg-red-600/20 dark:hover:text-red-400"
                         >
                           <RemoveIcon size={20} />
-                        </button>
+                        </Toggle>
                       </div>
                     </div>
                     <div className="mx-4 mb-4 max-h-[40dvh] overflow-scroll">
