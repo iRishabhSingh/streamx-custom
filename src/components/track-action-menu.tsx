@@ -1,15 +1,38 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
+import {
+  deleteTrack,
+  updateTrackField,
+} from "@/features/playlist/playlistActions";
+import { Button } from "@/components/ui/button";
 import type { Track } from "@/types/mediaTypes";
+import ConfirmationPopup from "@/components/confirmation-popup";
 import TrackDetailsPopup from "@/components/track-details-popup";
 import { HeartIcon, LoopIcon, SkipIcon, RemoveIcon, InfoIcon } from "@/assets";
 
 const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
   const [isDetailsPopupOpen, setIsDetailsPopupOpen] = useState(false);
+  const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const { isMarkedAsFavorite, isLoopEnabled, shouldSkip } = track;
 
   const toggleDetailsPopup = () => setIsDetailsPopupOpen((prev) => !prev);
 
-  const { isMarkedAsFavorite, isLoopEnabled, shouldSkip } = track;
+  const handleDeleteTrack = () => {
+    if (isMarkedAsFavorite) {
+      setIsDeletePopupOpen(true);
+    } else {
+      deleteTrack(track, dispatch);
+    }
+  };
+
+  const confirmDelete = () => {
+    deleteTrack(track, dispatch);
+    setIsDeletePopupOpen(false);
+  };
 
   const actions = [
     {
@@ -21,7 +44,7 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
           fill={isMarkedAsFavorite ? "#FF3040" : "currentColor"}
         />
       ),
-      onClick: () => {},
+      onClick: () => updateTrackField(track, "isMarkedAsFavorite", dispatch),
       className: "md:hidden",
     },
     {
@@ -33,7 +56,7 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
     {
       label: shouldSkip ? "Don't skip" : "Skip track",
       icon: <SkipIcon variant={shouldSkip ? "filled" : "outlined"} size={20} />,
-      onClick: () => {},
+      onClick: () => updateTrackField(track, "shouldSkip", dispatch),
       className: "",
     },
     {
@@ -45,7 +68,7 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
     {
       label: "Delete track",
       icon: <RemoveIcon size={20} />,
-      onClick: () => {},
+      onClick: handleDeleteTrack,
       className: "text-red-600 dark:text-red-400",
     },
   ];
@@ -58,14 +81,15 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
           <ul className="flex flex-col py-2">
             {actions.map(({ label, icon, onClick, className }) => (
               <li key={label}>
-                <button
-                  aria-label={label}
-                  className={`flex w-full items-center gap-2 p-2 text-start hover:bg-neutral-200 dark:hover:bg-neutral-700 ${className}`}
+                <Button
+                  variant="ghost"
                   onClick={onClick}
+                  aria-label={label}
+                  className={`flex w-full items-center justify-start gap-2 rounded-none p-2 text-start hover:bg-neutral-200 dark:hover:bg-neutral-700 ${className}`}
                 >
                   {icon}
                   <span className="ml-2">{label}</span>
-                </button>
+                </Button>
               </li>
             ))}
           </ul>
@@ -75,6 +99,16 @@ const TrackActionsMenu: React.FC<{ track: Track }> = ({ track }) => {
       {/* Track Details Popup */}
       {isDetailsPopupOpen && (
         <TrackDetailsPopup track={track} onClose={toggleDetailsPopup} />
+      )}
+
+      {/* Delete Confirmation Popup */}
+      {isDeletePopupOpen && (
+        <ConfirmationPopup
+          confirmText="Delete"
+          onConfirm={confirmDelete}
+          onCancel={() => setIsDeletePopupOpen(false)}
+          message="Are you sure you want to delete this track?"
+        />
       )}
     </>
   );

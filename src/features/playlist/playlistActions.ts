@@ -4,6 +4,7 @@ import {
   setShuffleEnabled,
   setAutoPlayEnabled,
   updateTrackById,
+  removeTrackById,
 } from "@/features/playlist/playlistSlice";
 import type { Track } from "@/types/mediaTypes";
 import { Dispatch, UnknownAction } from "@reduxjs/toolkit";
@@ -50,4 +51,11 @@ export const updateTrackField = (
 ) => {
   const updatedTrack = { ...track, [field]: !track[field] };
   dispatch(updateTrackById(updatedTrack));
+};
+
+export const deleteTrack = (
+  track: Track,
+  dispatch: Dispatch<UnknownAction>,
+) => {
+  dispatch(removeTrackById(track.id));
 };

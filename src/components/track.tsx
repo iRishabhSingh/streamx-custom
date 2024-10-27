@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { CSS } from "@dnd-kit/utilities";
+import { useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 
@@ -12,12 +13,16 @@ import {
   VideoIcon,
 } from "@/assets";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import { truncateTrackName } from "@/utils/formatUtils";
 import type { Track as TrackProp } from "@/types/mediaTypes";
 import TrackActionsMenu from "@/components/track-action-menu";
+import { updateTrackField } from "@/features/playlist/playlistActions";
 
 const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+
+  const dispatch = useDispatch();
 
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: track.id });
@@ -84,41 +89,44 @@ const Track: React.FC<{ track: TrackProp }> = ({ track }) => {
         {/* Action Buttons */}
         <div className="flex flex-shrink-0 items-center gap-3">
           {/* Favorite toggle Button */}
-          <button
+          <Button
+            variant="ghost"
             aria-label="Toggle Favorite"
-            className={cn(
-              "hidden rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 md:flex",
-              isMarkedAsFavorite
-                ? "text-red-500"
-                : "hover:bg-neutral-100 dark:hover:bg-neutral-800",
-            )}
+            onClick={() => {
+              updateTrackField(track, "isMarkedAsFavorite", dispatch);
+            }}
+            className="hidden h-9 w-9 rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 md:flex"
           >
             <HeartIcon
-              size={20}
               variant={isMarkedAsFavorite ? "filled" : "outlined"}
               fill={isMarkedAsFavorite ? "#FF3040" : "currentColor"}
             />
-          </button>
+          </Button>
 
           {/* Loop toggle Button */}
-          <button
-            aria-label="Toggle Loop"
+          <Button
+            variant="ghost"
+            aria-label="Loop"
+            onClick={() => {
+              updateTrackField(track, "isLoopEnabled", dispatch);
+            }}
             className={cn(
-              "hidden rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900 md:flex",
+              "hidden h-9 w-9 rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 md:flex",
               isLoopEnabled && "bg-neutral-200 dark:bg-neutral-800",
             )}
           >
             <LoopIcon size={20} />
-          </button>
+          </Button>
 
           {/* Options Menu */}
-          <button
+          <Button
+            variant="ghost"
             aria-label="Track Options"
             onClick={() => setShowOptionsMenu((prev) => !prev)}
-            className="rounded-full p-2 transition-colors hover:bg-neutral-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:hover:bg-neutral-800 dark:focus-visible:ring-offset-neutral-900"
+            className="hidden h-9 w-9 rounded-full p-2 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-neutral-900 md:flex"
           >
-            <TrackMenuIcon size={20} />
-          </button>
+            <TrackMenuIcon />
+          </Button>
 
           {/* Dropdown Menu */}
           {showOptionsMenu && (
